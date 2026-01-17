@@ -1,0 +1,68 @@
+name: Security Gate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    services:
+      zap:
+        image: owasp/zap2docker-stable
+        ports:
+          - 8080:8080
+        options: >-
+          --health-cmd "curl -f http://localhost:8080 || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Security Gate
+        run: python security_gate.py --target ${{ secrets.TARGET_URL }} --output results.json
+        continue-on-error: true
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-results
+          path: results.json
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+            
+            const body = `## 🚦 Security Gate Results
+            
+            **Status**: ${results.passed ? '✅ PASSED' : '❌ FAILED'}
+            **Reason**: ${results.reason}
+            
+            | Scanner | High | Medium | Low |
+            |---------|------|--------|-----|
+            ${results.scan_results.map(r => `| ${r.scanner} | ${r.high} | ${r.medium} | ${r.low} |`).join('\n')}
+            `;
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });

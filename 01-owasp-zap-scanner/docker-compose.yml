@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  zap:
+    image: owasp/zap2docker-stable
+    container_name: owasp-zap
+    ports:
+      - "8080:8080"
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
+    volumes:
+      - ./reports:/zap/reports
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  scanner:
+    build: .
+    depends_on:
+      zap:
+        condition: service_healthy
+    environment:
+      - ZAP_HOST=zap
+      - ZAP_PORT=8080
+    volumes:
+      - ./reports:/app/reports

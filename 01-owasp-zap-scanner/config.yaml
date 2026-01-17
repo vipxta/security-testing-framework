@@ -1,0 +1,38 @@
+# OWASP ZAP Scanner Configuration
+
+zap:
+  host: localhost
+  port: 8080
+  api_key: ""
+
+scan:
+  spider:
+    enabled: true
+    max_depth: 5
+    max_children: 10
+  
+  ajax_spider:
+    enabled: false
+    max_duration: 60
+    browser: firefox-headless
+  
+  active_scan:
+    enabled: true
+    policy: "Default Policy"
+    thread_count: 5
+    delay_in_ms: 0
+
+authentication:
+  enabled: false
+  method: form  # form, http_basic, json
+  login_url: ""
+  username_field: "username"
+  password_field: "password"
+  username: ""
+  password: ""
+
+report:
+  format: html
+  output_dir: ./reports
+  include_passed: false
+  include_evidence: true

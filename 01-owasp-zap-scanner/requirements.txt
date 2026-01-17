@@ -1,0 +1,5 @@
+python-owasp-zap-v2.4>=0.0.21
+requests>=2.31.0
+pyyaml>=6.0.1
+rich>=13.7.0
+click>=8.1.7
