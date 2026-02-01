@@ -56,7 +56,7 @@ python scanner.py --target https://example.com
 ## 👤 Autor
 
 **Isaac Meneguini Albuquerque**
-- LinkedIn: [isaac-meneguini](https://linkedin.com/in/isaac-meneguini)
+- LinkedIn: [isaac-meneguini](https://www.linkedin.com/in/isaac-meneguini-albuquerque/)
 - Email: isaacmeneguini@gmail.com
 
 ## 📄 Licença
